@@ -7,6 +7,9 @@ internal class Program
 {
     public static EventWaitHandle ProgramStarted;
 
+    // Keep a reference so the GC does not finalize it and release the named mutex.
+    private static Mutex? _instanceMutex;
+
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
@@ -38,7 +41,7 @@ internal class Program
         }
         else
         {
-            _ = new Mutex(true, "v2rayN", out var bOnlyOneInstance);
+            _instanceMutex = new Mutex(true, "v2rayN", out var bOnlyOneInstance);
             if (!bOnlyOneInstance)
             {
                 return false;
